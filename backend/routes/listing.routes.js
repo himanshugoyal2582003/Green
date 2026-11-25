@@ -1,0 +1,11 @@
+const router = require('express').Router();
+const controller = require('../controllers/listing.controller');
+const { authenticate, allowRoles } = require('../middleware/auth.middleware');
+const upload = require('../middleware/imageUpload.middleware');
+router.get('/stats', controller.stats);
+router.post('/suggest', controller.suggest);
+router.post('/ai-price', controller.aiPriceEstimate);
+router.get('/mine', authenticate, allowRoles('seller', 'admin'), controller.myListings);
+router.get('/', controller.getListings);
+router.post('/', authenticate, allowRoles('seller', 'admin'), upload.array('images', 6), controller.createListing);
+module.exports = router;

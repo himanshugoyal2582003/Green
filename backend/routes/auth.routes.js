@@ -1,0 +1,11 @@
+const router = require('express').Router();
+const rateLimit = require('express-rate-limit');
+const { signup, login, me, updateProfileImage } = require('../controllers/auth.controller');
+const { authenticate } = require('../middleware/auth.middleware');
+const upload = require('../middleware/imageUpload.middleware');
+const authLimit = rateLimit({ windowMs: 15 * 60 * 1000, limit: 30, standardHeaders: 'draft-8', legacyHeaders: false, message: { error: 'Too many attempts. Try again in 15 minutes.' } });
+router.post('/signup', authLimit, signup);
+router.post('/login', authLimit, login);
+router.get('/me', authenticate, me);
+router.patch('/profile-image', authenticate, upload.single('image'), updateProfileImage);
+module.exports = router;
