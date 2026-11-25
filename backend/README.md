@@ -1,42 +1,54 @@
 # Green Marketplace API
 
+Express 5 and MongoDB API for the Green campus marketplace. The API listens on port `3001` by default; the Next.js frontend runs separately and proxies `/api/*` requests to it during local development.
+
 ## Setup
 
-Create `backend/.env` with these values:
+From this directory:
 
-```env
-PORT=3000
-MONGODB_URI=mongodb://127.0.0.1:27017/green_marketplace
-JWT_SECRET=use-a-private-random-secret-at-least-32-characters-long
-ADMIN_SIGNUP_KEY=use-a-private-admin-invite-key
-CLOUDINARY_CLOUD_NAME=your-cloud-name
-CLOUDINARY_API_KEY=your-api-key
-CLOUDINARY_API_SECRET=your-api-secret
-```
-
-For MongoDB Atlas, set `MONGODB_URI` to your Atlas connection string. The app also accepts `MONGO_URI` or `MONGO_URL`.
-Cloudinary also accepts the `CLOUDINARY_URL` format from its console instead of the three separate Cloudinary values.
-
-Install and start from the `backend` folder:
-
-```bash
+```sh
 npm install
 npm start
 ```
 
-The Express server serves the frontend at `http://localhost:3000`. On first startup it creates 200 fictional sale records and sample listings in MongoDB.
+Create `backend/.env` using [`.env.example`](.env.example). `MONGODB_URI` and `JWT_SECRET` are required; the JWT secret must be at least 32 characters. `PORT` defaults to `3001`. MongoDB URI aliases `MONGO_URI` and `MONGO_URL` are also accepted.
 
-## Roles and endpoints
+| Variable | Purpose |
+| --- | --- |
+| `PORT` | API listening port; defaults to `3001`. |
+| `MONGODB_URI` | MongoDB connection string (local or Atlas). |
+| `JWT_SECRET` | Private signing secret for seven-day bearer tokens. |
+| `ADMIN_SIGNUP_KEY` | Invite key required when creating an admin account. |
+| `CLOUDINARY_URL` or `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` | Cloudinary image uploads. |
+| `STRIPE_SECRET_KEY` | Stripe checkout and purchase verification. |
+| `GEMINI_API_KEY` | Optional external price lookup; local pricing is also available. |
+| `TELEGRAM_BOT_TOKEN` | Optional Telegram bot integration. |
+| `FRONTEND_URL` | Frontend origin used for payment redirect links and bot links. |
 
-- `POST /api/auth/signup` — create a buyer, seller, or admin account. Admin signup requires `ADMIN_SIGNUP_KEY`.
-- `POST /api/auth/login` — sign in and receive a seven day bearer token.
-- `GET /api/auth/me` — current account.
-- `GET /api/listings` — public marketplace search and filters.
-- `POST /api/listings` — seller or admin only; creates a listing and price suggestion.
-- Listing creation accepts an `images` multipart field with up to six JPG, PNG, WebP, or AVIF photos, maximum 5 MB each.
-- `GET /api/listings/mine` — seller or admin's listings.
-- `POST /api/listings/suggest` — price suggestion from the seeded sale data.
-- `PATCH /api/auth/profile-image` — signed-in user profile photo upload (`image` multipart field).
-- `GET /api/admin/overview`, `/users`, `/listings` — admin only.
+The API connects to MongoDB, seeds historical price records and sample listings if their collections are empty, starts the Telegram bot when configured, and then listens for requests. Health check: `GET /api/health`.
 
-Passwords are bcrypt hashed. Do not commit `.env` or share its values.
+## API routes
+
+All routes are prefixed with `/api`.
+
+| Prefix | Main endpoints | Access |
+| --- | --- | --- |
+| `/auth` | `POST /signup`, `POST /login`, `GET /me`, `PATCH /profile-image` | Signup/login are public and rate-limited; profile endpoints require a bearer token. Admin signup requires the invite key. |
+| `/listings` | `GET /`, `GET /stats`, `POST /suggest`, `POST /ai-price`, `GET /mine`, `POST /` | Browsing and suggestions are public; listing management requires seller or admin. |
+| `/admin` | `GET /overview`, `GET /users`, `GET /listings` | Admin only. |
+| `/payments` | `POST /checkout`, `POST /verify`, `GET /purchases` | Authenticated users; checkout also requires Stripe configuration. |
+| `/chats` | `GET /mine`, `GET /listing/:listingId`, `POST /listing/:listingId/message`, `PATCH /:chatId/decision` | Authenticated users. |
+
+Listing photos use the multipart field `images` (up to six files); profile photos use `image`. Passwords are stored as bcrypt hashes.
+
+## Backend folders
+
+- [`bot/`](bot/README.md) — Telegram bot.
+- [`config/`](config/README.md) — database and Cloudinary setup.
+- [`controllers/`](controllers/README.md) — request handling and business operations.
+- [`middleware/`](middleware/README.md) — authentication, upload, and error handling.
+- [`models/`](models/README.md) — Mongoose schemas.
+- [`routes/`](routes/README.md) — API route registration.
+- [`utils/`](utils/README.md) — pricing, seeding, and service helpers.
+
+Do not commit `.env` or share secret values.
