@@ -1,6 +1,10 @@
 # Deployment Guide
 
-Green Second Life is designed to deploy the **Backend on Render** and the **Frontend on Netlify**.
+Green Second Life is deployed with the **Frontend on Netlify** and the **Backend on Render**:
+
+- **Live Frontend (Netlify)**: https://greensecond.netlify.app/
+- **Live Backend (Render)**: https://green-z5xs.onrender.com/
+- **Telegram Bot**: https://t.me/GreenSecondSellerBot
 
 ---
 

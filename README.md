@@ -11,6 +11,14 @@ A full-stack secondhand campus marketplace with **Gemini AI real-world pricing**
 [![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb)](https://www.mongodb.com/)
 [![Stripe](https://img.shields.io/badge/Stripe-Checkout-635BFF?logo=stripe)](https://stripe.com/)
 
+### 🌐 Live Deployments
+
+| Service | Platform | URL |
+| :--- | :--- | :--- |
+| **Web App** | Netlify | [greensecond.netlify.app](https://greensecond.netlify.app/) |
+| **Backend API** | Render | [green-z5xs.onrender.com](https://green-z5xs.onrender.com/api/health) |
+| **Telegram Bot** | Telegram | [@GreenSecondSellerBot](https://t.me/GreenSecondSellerBot) |
+
 </div>
 
 ---
