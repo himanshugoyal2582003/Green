@@ -1,49 +1,94 @@
-# Green Second Life Marketplace
+<div align="center">
 
-Green is a campus-focused secondhand marketplace for books, calculators, cycles, and other student essentials. Buyers can browse, save, chat about, and purchase listings; sellers can publish items with suggested pricing; administrators can review marketplace activity.
+# 🌿 Green — Second Life Campus Marketplace
 
-## Project layout
+**Give good things another go.**  
+A full-stack secondhand campus marketplace with **Gemini AI real-world pricing**, **role-based dashboards** (Buyer, Seller, Admin), **chat-gated Stripe Checkout**, and a synchronized **Telegram Bot** (`@GreenSecondSellerBot`).
 
-- [`backend/`](backend/README.md) — Express API, MongoDB models, authentication, listings, chats, payments, and integrations.
-- [`frontend/`](frontend/README.md) — Next.js App Router application.
-- [`render.yaml`](render.yaml) — Render web-service configuration for the backend.
+[![License: MIT](https://img.shields.io/badge/License-MIT-1f4e37.svg)](./LICENSE)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org/)
+[![Express](https://img.shields.io/badge/Express-5-lightgrey?logo=express)](https://expressjs.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb)](https://www.mongodb.com/)
+[![Stripe](https://img.shields.io/badge/Stripe-Checkout-635BFF?logo=stripe)](https://stripe.com/)
 
-Each source directory has its own README describing its responsibilities.
+</div>
 
-## Requirements
+---
 
-- Node.js compatible with the installed Next.js and Express dependencies.
-- MongoDB (local or Atlas).
-- Optional service credentials for Cloudinary image storage, Stripe checkout, Gemini price lookup, and the Telegram bot.
+## ✨ Key Features
 
-## Run locally
+- **Separate Hero & Marketplace Pages**: Dedicated landing page (`/`), full filterable marketplace (`/explore`), product detail (`/listings/[id]`), wanted board (`/wanted`), and listing creator (`/sell`).
+- **Role-Specific Dashboards**:
+  - **Buyer Dashboard (`/dashboard/buyer`)**: Saved items, purchase chats & approval status, and Stripe purchase history.
+  - **Seller Dashboard (`/dashboard/seller`)**: Active/completed stats, listing manager, and incoming buyer requests with **Approve / Decline** controls.
+  - **Admin Dashboard (`/dashboard/admin`)**: Platform metrics, user directory, and marketplace listings overview.
+- **Gemini AI Real-World Pricing + Depreciation Index**: Sellers enter an item name and click **✨ AI Price** to fetch its real-world retail price (`INR`) via Gemini Flash, automatically reduced by age and condition (`Like new`, `Good`, `Fair`).
+- **Chat-Gated Stripe Checkout**: Buyers message sellers to request a purchase; once the seller approves in chat (web or Telegram), the **Buy now** Stripe Checkout button unlocks.
+- **Telegram Bot (`@GreenSecondSellerBot`)**: Log in or create an account, browse available products with images, list items with Gemini pricing & photo upload, chat with buyers/sellers, and pay via Stripe directly inside Telegram.
 
-1. Configure [`backend/.env.example`](backend/.env.example) as `backend/.env`. At minimum, set `MONGODB_URI` and a private `JWT_SECRET` of at least 32 characters.
-2. Configure [`frontend/.env.example`](frontend/.env.example) as `frontend/.env.local`. The default backend URL is `http://localhost:3001`.
-3. In one terminal:
+---
 
-   ```sh
-   cd backend
-   npm install
-   npm start
-   ```
+## 📸 Screenshots
 
-4. In another terminal:
+| Hero & Marketplace | Product Detail |
+| :---: | :---: |
+| ![Hero and Marketplace](img/hero-marketplace.jpeg) | ![Product Detail](img/product-detail.jpeg) |
 
-   ```sh
-   cd frontend
-   npm install
-   npm run dev
-   ```
+| Create Listing with AI Price | Seller Dashboard |
+| :---: | :---: |
+| ![Create Listing](img/create-listing.jpeg) | ![Seller Dashboard](img/seller-dashboard.jpeg) |
 
-5. Open `http://localhost:3000`. The API health endpoint is `http://localhost:3001/api/health`.
+| Wanted Board | Design System |
+| :---: | :---: |
+| ![Wanted Board](img/wanted-board.jpeg) | ![Design System](img/design-system.jpeg) |
 
-The backend seeds historical price records and sample listings when the corresponding collections are empty. Sample listings are for demonstration; configure real credentials before using payment or external integrations.
+---
 
-## Checks
+## 🏗️ Architecture & Documentation
 
-From `frontend/`, run `npm run lint` and `npm run build`. The backend currently defines `npm start` and `npm run dev` as server-start commands; it has no test script.
+- 📐 **[System Architecture](docs/architecture.md)** — Mermaid diagrams, AI pricing & Stripe approval flows, and RBAC matrix
+- 🔌 **[REST API Reference](docs/api.md)** — Full endpoint documentation for Auth, Listings, Chats, Payments, and Admin
+- 🚀 **[Deployment Guide](docs/deployment.md)** — Production setup for **Netlify** (frontend) and **Render** (backend)
 
-## Security
+---
 
-Never commit `.env` or `.env.local` files or publish their values. Use a unique random JWT secret and keep admin invite and third-party API keys private. See the backend and frontend guides for configuration details.
+## ⚡ Quick Start (Local Development)
+
+### Prerequisites
+- Node.js 20+
+- MongoDB Atlas URI
+- Cloudinary, Stripe, Gemini API, and (optional) Telegram Bot keys
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/himanshugoyal2582003/Green.git
+cd Green
+```
+
+### 2. Start the Backend (`http://localhost:3001`)
+```bash
+cd backend
+npm install
+cp .env.example .env   # Fill in your MongoDB, JWT, Cloudinary, Stripe, Gemini & Telegram keys
+npm run dev
+```
+
+### 3. Start the Frontend (`http://localhost:3000`)
+```bash
+cd frontend
+npm install
+cp .env.example .env.local   # Set BACKEND_URL=http://localhost:3001
+npm run dev
+```
+
+Open **`http://localhost:3000`** in your browser.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) and our [Code of Conduct](CODE_OF_CONDUCT.md) before opening a pull request.
+
+## 📄 License
+
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
