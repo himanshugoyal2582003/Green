@@ -3,6 +3,7 @@ const express = require('express');
 const helmet = require('helmet');
 const connectDB = require('./config/db');
 const { seedDatabase } = require('./utils/seed');
+const { startTelegramBot } = require('./bot/telegramBot');
 const authRoutes = require('./routes/auth.routes');
 const listingRoutes = require('./routes/listing.routes');
 const adminRoutes = require('./routes/admin.routes');
@@ -29,6 +30,7 @@ async function start() {
   if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) throw new Error('JWT_SECRET is required in backend/.env and must be at least 32 characters.');
   await connectDB();
   await seedDatabase();
+  startTelegramBot();
   app.listen(PORT, () => console.log(`Green Second Life is running at http://localhost:${PORT}`));
 }
 start().catch(error => { console.error(`Startup failed: ${error.message}`); process.exit(1); });
